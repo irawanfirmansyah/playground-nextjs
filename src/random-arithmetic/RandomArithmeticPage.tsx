@@ -1,13 +1,12 @@
 import React from "react";
+import { TextField, Button, Typography, Box } from "@mui/material";
 
 const operator = ["plus", "minus", "multiply"];
 
 const RandomArithmeticPage = () => {
-  const [angka1, setAngka1] = React.useState(Math.floor(Math.random() * 10));
-  const [angka2, setAngka2] = React.useState(Math.floor(Math.random() * 10));
-  const [operasi, setOperasi] = React.useState(
-    operator[Math.floor((Math.random() * 10) / 3)]
-  );
+  const [angka1, setAngka1] = React.useState(0);
+  const [angka2, setAngka2] = React.useState(0);
+  const [operasi, setOperasi] = React.useState("");
 
   const [timer, setTimer] = React.useState(20);
   const [gameOver, setGameOver] = React.useState(false);
@@ -16,6 +15,14 @@ const RandomArithmeticPage = () => {
   const [score, setScore] = React.useState(0);
 
   const idInterval = React.useRef<NodeJS.Timer | null>(null);
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    setAngka1(Math.floor(Math.random() * 10));
+    setAngka2(Math.floor(Math.random() * 10));
+    setOperasi(operator[Math.floor(Math.random() * 3)]);
+  }, []);
 
   React.useEffect(() => {
     if (ans) {
@@ -29,10 +36,8 @@ const RandomArithmeticPage = () => {
       if (operasi === "multiply") {
         result = angka1 * angka2;
       }
-      console.log(result, Number(ans));
 
       if (result === Number(ans)) {
-        setAns("");
         setScore((s) => s + 1);
         setAngka1(Math.floor(Math.random() * 10));
         setAngka2(Math.floor(Math.random() * 10));
@@ -59,27 +64,67 @@ const RandomArithmeticPage = () => {
     }
   }, [timer]);
 
-  if (gameOver) {
-    return (
-      <div>
-        <h1>Game Selesai!!</h1>
-        <div>Score: {score}</div>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <div>
-        <span>
-          {angka1} {operasi === "plus" ? "+" : operasi === "minus" ? "-" : "x"}{" "}
-          {angka2}
-        </span>
-      </div>
-      <div>Sisa waktu: {timer}</div>
-      <div>Score: {score}</div>
-      <input value={ans} onChange={(e) => setAns(e.target.value)} />
-    </div>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100vh",
+        justifyContent: "center",
+      }}
+    >
+      <Box
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {gameOver ? (
+          <>
+            <Box>
+              <Typography variant="h1">Game Selesai!!</Typography>
+              <Typography variant="body1">Score: {score}</Typography>
+            </Box>
+          </>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              rowGap: "12px",
+            }}
+          >
+            <div>
+              <h1>
+                <span>
+                  {angka1}{" "}
+                  {operasi === "plus" ? "+" : operasi === "minus" ? "-" : "x"}{" "}
+                  {angka2}
+                </span>
+              </h1>
+            </div>
+            <div>Sisa waktu: {timer}</div>
+            <div>Score: {score}</div>
+            <TextField
+              label="Jawaban"
+              value={ans}
+              variant="filled"
+              onChange={(e) => setAns(e.target.value)}
+              inputRef={inputRef}
+            />
+            <Button
+              variant="contained"
+              onClick={() => {
+                setAns("");
+                inputRef.current?.focus();
+              }}
+            >
+              Clear
+            </Button>
+          </Box>
+        )}
+      </Box>
+    </Box>
   );
 };
 
