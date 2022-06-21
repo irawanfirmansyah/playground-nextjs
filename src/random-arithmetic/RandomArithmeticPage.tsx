@@ -1,5 +1,6 @@
 import React from "react";
 import { TextField, Button, Typography, Box } from "@mui/material";
+import Head from "next/head";
 
 const operator = ["plus", "minus", "multiply"];
 
@@ -9,7 +10,13 @@ const RandomArithmeticPage = () => {
   const [operasi, setOperasi] = React.useState("");
 
   const [timer, setTimer] = React.useState(20);
+  const [preparationTimer, setPreparationTimer] = React.useState(3);
+
+  const [showGetReady, setShowGetReady] = React.useState(false);
+
   const [gameOver, setGameOver] = React.useState(false);
+  const [gameStarted, setGameStarted] = React.useState(false);
+
   const [ans, setAns] = React.useState("");
 
   const [score, setScore] = React.useState(0);
@@ -23,6 +30,12 @@ const RandomArithmeticPage = () => {
     setAngka2(Math.floor(Math.random() * 10));
     setOperasi(operator[Math.floor(Math.random() * 3)]);
   }, []);
+
+  /**
+   * ----
+   * Lifecycles
+   * ----
+   */
 
   React.useEffect(() => {
     if (ans) {
@@ -39,6 +52,7 @@ const RandomArithmeticPage = () => {
 
       if (result === Number(ans)) {
         setScore((s) => s + 1);
+        setAns("");
         setAngka1(Math.floor(Math.random() * 10));
         setAngka2(Math.floor(Math.random() * 10));
         const nextOperasi = operator[Math.floor(Math.random() * 3)];
@@ -47,84 +61,152 @@ const RandomArithmeticPage = () => {
     }
   }, [angka1, angka2, ans, operasi]);
 
+  // Init interval for preparation
   React.useEffect(() => {
-    if (idInterval.current === null) {
+    if (showGetReady) {
       const id = setInterval(() => {
-        setTimer((s) => s - 1);
+        setPreparationTimer((s) => s - 1);
       }, 1000);
 
       idInterval.current = id;
     }
-  }, []);
+  }, [showGetReady]);
 
+  // // Clear preparation interval
+  React.useEffect(() => {
+    if (preparationTimer === 0 && showGetReady && idInterval.current) {
+      clearInterval(idInterval.current);
+      idInterval.current = null;
+      setShowGetReady(false);
+      setGameStarted(true);
+    }
+  }, [preparationTimer, showGetReady]);
+
+  // // Init interval for game duration
+  React.useEffect(() => {
+    if (gameStarted) {
+      if (idInterval.current === null) {
+        const id = setInterval(() => {
+          setTimer((s) => s - 1);
+        }, 1000);
+
+        idInterval.current = id;
+      }
+    }
+  }, [gameStarted]);
+
+  // // Clear game duration's interval
   React.useEffect(() => {
     if (timer === 0 && idInterval.current) {
       clearInterval(idInterval.current);
+      idInterval.current = null;
       setGameOver(true);
     }
   }, [timer]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100vh",
-        justifyContent: "center",
-      }}
-    >
+    <>
+      <Head>
+        <title>Random Arithmetic</title>
+      </Head>
       <Box
         sx={{
-          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          height: "100vh",
+          justifyContent: "center",
         }}
       >
-        {gameOver ? (
-          <>
-            <Box>
-              <Typography variant="h1">Game Selesai!!</Typography>
-              <Typography variant="body1">Score: {score}</Typography>
-            </Box>
-          </>
-        ) : (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              rowGap: "12px",
-            }}
-          >
-            <div>
-              <h1>
-                <span>
-                  {angka1}{" "}
-                  {operasi === "plus" ? "+" : operasi === "minus" ? "-" : "x"}{" "}
-                  {angka2}
-                </span>
-              </h1>
-            </div>
-            <div>Sisa waktu: {timer}</div>
-            <div>Score: {score}</div>
-            <TextField
-              label="Jawaban"
-              value={ans}
-              variant="filled"
-              onChange={(e) => setAns(e.target.value)}
-              inputRef={inputRef}
-            />
-            <Button
-              variant="contained"
-              onClick={() => {
-                setAns("");
-                inputRef.current?.focus();
+        <Box
+          sx={{
+            textAlign: "center",
+          }}
+        >
+          {showGetReady && (
+            <Typography variant="h1">{preparationTimer}</Typography>
+          )}
+          {!gameStarted && !gameOver && !showGetReady && (
+            <>
+              <Typography variant="h4" sx={{ marginBottom: "12px" }}>
+                Random Arithmetic Game
+              </Typography>
+              <Box
+                display="flex"
+                sx={{
+                  columnGap: "8px",
+                }}
+              >
+                <Button
+                  fullWidth
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    setShowGetReady(true);
+                  }}
+                >
+                  Mulai Main
+                </Button>
+              </Box>
+            </>
+          )}
+          {gameOver && (
+            <>
+              <Box>
+                <Typography variant="h1">Game Selesai!!</Typography>
+                <Typography variant="body1">Score: {score}</Typography>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setGameOver(false);
+                    setGameStarted(false);
+
+                    setPreparationTimer(3);
+                    setTimer(20);
+
+                    setShowGetReady(true);
+                  }}
+                  sx={{
+                    marginTop: "8px",
+                  }}
+                >
+                  Coba Lagi!!
+                </Button>
+              </Box>
+            </>
+          )}
+
+          {timer !== 0 && gameStarted && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                rowGap: "12px",
               }}
             >
-              Clear
-            </Button>
-          </Box>
-        )}
+              <div>
+                <h1>
+                  <span>
+                    {angka1}{" "}
+                    {operasi === "plus" ? "+" : operasi === "minus" ? "-" : "x"}{" "}
+                    {angka2}
+                  </span>
+                </h1>
+              </div>
+              <div>Sisa waktu: {timer}</div>
+              <div>Score: {score}</div>
+              <TextField
+                label="Jawaban"
+                value={ans}
+                variant="filled"
+                onChange={(e) => setAns(e.target.value)}
+                inputRef={inputRef}
+              />
+            </Box>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 
