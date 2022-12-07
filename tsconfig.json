@@ -17,7 +17,9 @@
     "incremental": true,
     "paths": {
       "@random-arithmetic/*": ["random-arithmetic/*"],
-      "@random-arithmetic": ["random-arithmetic/index"]
+      "@random-arithmetic": ["random-arithmetic/index"],
+      "@todos/*": ["todos/*"],
+      "@todos": ["todos/index"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
