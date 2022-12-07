@@ -1,7 +1,10 @@
+/** @jsxImportSource @emotion/react */
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import styles from "../styles/Home.module.css";
+import { css } from "@emotion/react";
 
 const Home: NextPage = () => {
   return (
@@ -13,35 +16,68 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <h1 className={styles.title}>Welcome to Playgruond Next.js!</h1>
 
         <p className={styles.description}>
-          Get started by editing{" "}
-          <code className={styles.code}>pages/index.tsx</code>
+          This website is bootstrapped with{" "}
+          <a
+            css={css`
+              &:is(:active, :focus, :hover) {
+                text-decoration: underline !important;
+                color: #0070f3 !important;
+              }
+            `}
+            href="https://nextjs.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Next.js
+          </a>{" "}
+          +{" "}
+          <a
+            css={css`
+              &:is(:active, :focus, :hover) {
+                text-decoration: underline !important;
+                color: #0070f3 !important;
+              }
+            `}
+            href="https://mui.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Material UI 5
+          </a>
+          <br />
+          Try explore some random features in here!!
         </p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+          <Link href="/random-arithmetic" className={styles.card}>
+            <h2>Random-Arithmetic &rarr;</h2>
+            <p>
+              Wanna play some game of arithmetic question? <br />
+              <strong>Click here!</strong>
+            </p>
+          </Link>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
+          <Link href="/todos" className={styles.card}>
+            <h2>Todos &rarr;</h2>
             <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+          </Link>
 
-          <a
+          <Link
+            target="_blank"
+            rel="noopener noreferrer"
             href="https://github.com/vercel/next.js/tree/canary/examples"
             className={styles.card}
           >
             <h2>Examples &rarr;</h2>
             <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+          </Link>
 
-          <a
+          <Link
+            target="_blank"
+            rel="noopener noreferrer"
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
             className={styles.card}
           >
@@ -49,12 +85,12 @@ const Home: NextPage = () => {
             <p>
               Instantly deploy your Next.js site to a public URL with Vercel.
             </p>
-          </a>
+          </Link>
         </div>
       </main>
 
       <footer className={styles.footer}>
-        <a
+        <Link
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
@@ -63,7 +99,7 @@ const Home: NextPage = () => {
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
-        </a>
+        </Link>
       </footer>
     </div>
   );

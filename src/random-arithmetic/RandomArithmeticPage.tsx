@@ -1,6 +1,7 @@
 import React from "react";
 import { TextField, Button, Typography, Box } from "@mui/material";
 import Head from "next/head";
+import Navbar from "@components/Navbar";
 
 const operator = ["plus", "minus", "multiply"];
 
@@ -109,12 +110,13 @@ const RandomArithmeticPage = () => {
       <Head>
         <title>Random Arithmetic</title>
       </Head>
+      <Navbar />
+
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          height: "100vh",
           justifyContent: "center",
         }}
       >

@@ -19,7 +19,8 @@
       "@random-arithmetic/*": ["random-arithmetic/*"],
       "@random-arithmetic": ["random-arithmetic/index"],
       "@todos/*": ["todos/*"],
-      "@todos": ["todos/index"]
+      "@todos": ["todos/index"],
+      "@components/*": ["components/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

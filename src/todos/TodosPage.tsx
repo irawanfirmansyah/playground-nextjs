@@ -1,6 +1,7 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React from "react";
 import Head from "next/head";
+import Navbar from "@components/Navbar";
 
 const TodosPage = () => {
   const [title, setTitle] = React.useState("");
@@ -30,19 +31,8 @@ const TodosPage = () => {
         />
       </Head>
       <Box display={"flex"} flexDirection="column" height="100vh">
-        <header
-          style={{
-            flex: 0.2,
-            backgroundColor: "#1e3d59",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography variant="h3" color="HighlightText">
-            Write anything to do in here, and open it anytime
-          </Typography>
-        </header>
+        <Navbar />
+
         <main
           style={{
             flex: 1,
